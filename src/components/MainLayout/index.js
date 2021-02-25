@@ -34,7 +34,7 @@ const MainLayout = () => {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary">
-                    Login
+                  <Link href="/login" color="inherit">Login</Link>
                   </Button>
                 </Grid>
                 <Grid item>
