@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
     heroContent: {
@@ -38,7 +39,7 @@ const MainLayout = () => {
                 </Grid>
                 <Grid item>
                   <Button variant="outlined" color="primary">
-                    Register
+                    <Link href="/register">Register</Link>
                   </Button>
                 </Grid>
               </Grid>
