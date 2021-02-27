@@ -1,0 +1,262 @@
+swagger: "2.0"
+info:
+  description: "This is a REST API created for the examination system named Examine"
+  version: "1.0.0"
+  title: "Examine"
+  contact:
+    email: "hello@thongba.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:5000"
+basePath: "/api/v1"
+schemes:
+- "https"
+- "http"
+paths:
+  /login:
+    post:
+      operationId: user.user_login
+      tags:
+      - Authentication
+      summary: Logs the user into the system
+      description: Logs the user into the system
+      responses:
+        200:
+          description: Successfully logged in
+          schema:
+            type: object
+            items:
+              properties:
+                status:
+                  type: boolean
+                  description: status of operation
+                role:
+                  type: string
+                  description: role of user
+                access_token:
+                  type: string
+                  description: JWT Token
+        400:
+          description: Invalid credentials
+  /user:
+    get:
+      operationId: user.get_all
+      tags:
+        - User
+      summary: Get the all the users, sorted by last name
+      description: Get the all the users, sorted by last name
+      responses:
+        200:
+          description: Successfully get all users
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  type: integer
+                  description: User ID
+                first_name:
+                  type: string
+                  description: User's first name
+                last_name:
+                  type: string
+                  description: User's last name
+                email:
+                  type: string
+                  description: User's email
+                password:
+                  type: string
+                  description: User's password
+                timestamp:
+                  type: string
+                  description: Create/Update timestamp of the person object
+      security:
+      - api_key: []
+    post:
+      operationId: user.create_user
+      tags:
+        - User
+      summary: Create a new person
+      description: Create a new person
+      parameters:
+        - name: user
+          in: body
+          description: The new user object to create
+          required: True
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email of user to create
+      responses:
+        201:
+          description: Successfully created person
+          schema:
+            properties:
+              id:
+                type: integer
+                description: User ID
+              first_name:
+                type: string
+                description: User's first name
+              last_name:
+                type: string
+                description: User's last name
+              email:
+                type: string
+                description: User's email
+              password:
+                type: string
+                description: User's password
+              timestamp:
+                type: string
+                description: Create/Update timestamp of the person object
+      security:
+      - api_key: []
+  /user/{user_id}:
+    get:
+      operationId: user.get_one
+      tags:
+      - User
+      summary: Finds user by ID
+      description: Finds user by ID
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of the user to find
+          type: integer
+          required: True
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: User ID
+              first_name:
+                type: string
+                description: User's first name
+              last_name:
+                type: string
+                description: User's last name
+              email:
+                type: string
+                description: User's email
+              password:
+                type: string
+                description: User's password
+              timestamp:
+                type: string
+                description: Create/Update timestamp of the person object   
+        "400":
+          description: Invalid ID
+      security:
+      - api_key: []
+    put:
+      tags:
+      - User
+      summary: Update an existing user
+      description: Update an existing user
+      operationId: user.update_user
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of the user to update
+          required: true
+          type: integer
+        - name: person
+          in: body
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email of the user to update
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: User ID
+              first_name:
+                type: string
+                description: User's first name
+              last_name:
+                type: string
+                description: User's last name
+              email:
+                type: string
+                description: User's email
+              password:
+                type: string
+                description: User's password
+              timestamp:
+                type: string
+                description: Create/Update timestamp of the person object  
+        "400":
+          description: "Invalid user id"
+      security:
+      - api_key: []
+    delete:
+      tags:
+      - User
+      summary: Delete a user from the table
+      description: Delete a user from the table
+      operationId: user.delete_user
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: user_id
+        in: path
+        description: "ID of user to delete"
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "User not found"
+    
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: integer
+        format: int64
+      first_name:
+        type: string
+        description: "The first name of user"
+      lastname:
+        type: string
+        description: "The last name of user"
+      email:
+        type: string
+        description: "User's email"
+      password:
+        type: string
+        description: "User's password"
+      timestamp:
+        type: string
+        format: "date-time"
+    xml:
+      name: User

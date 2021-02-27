@@ -3,8 +3,18 @@
 """
 
 from flask import make_response, abort
-from config import db
 from models import User, UserSchema
+from config import db
+
+
+def user_login(email, password):
+    # Ignore the mimetype and always try to parse JSON
+    user = User.query.filter_by(email=email).first()
+    if user:
+        user = guard.authenticate(email, password)
+        res = {'success': True, 'role': user.role,  'access_token': guard.encode_jwt_token(user)}
+        return res
+
 
 def get_all():
     """

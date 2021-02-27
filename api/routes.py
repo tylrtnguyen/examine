@@ -6,9 +6,14 @@ import collections
 from config import db, guard, app
 from flask import jsonify
 from models import User
-from user import get_all, get_one, create_user, update_user, delete_user
+from user import get_all, get_one, create_user, update_user, delete_user, user_login
 
 # Set up routes
+@app.route('/')
+def home():
+    return {"Success": True, "message": "Welcome to api.examine.com"}
+
+
 @app.route('/api/v1')
 def index():
     """
@@ -36,10 +41,10 @@ def register():
     # Hash password using flask_praetorian guard
     hashed_password = guard.hash_password(password)
     assigned_role = 'examinee'
-    Examinee = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=assigned_role)
-    db.session.add(Examinee)
-    db.session.commit()
-    return { 'success': True, 'examinee': f"{first_name} {last_name}"}, 200
+    user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=assigned_role)
+    # Create a new user
+    new_user = create_user(user)
+    return { 'success': True, 'user': f"{first_name} {last_name}"}, 201
     
 
 """
@@ -57,12 +62,10 @@ def login():
     req = flask.request.get_json(force=True)
     email = req.get('email', None)
     password = req.get('password', None)
-    user = User.query.filter_by(email=email).first()
+    user = user_login(email, password)
     if user:
-        user = guard.authenticate(email, password)
-        res = {'status': 'success', 'role': user.role,  'access_token': guard.encode_jwt_token(user)}
-        return res, 200
-    return {'success': False }, 401
+        return user
+   
 
 
 """
@@ -75,8 +78,7 @@ def login():
 @flask_praetorian.auth_required
 def get_all_user():
     users = get_all()
-    return {"success": True, "data": users}, 200
-
+    return {"success": True, "data": users}
 
 
 """
@@ -101,4 +103,32 @@ def get_one_user(user_id):
 @app.route('/api/v1/user/<int:user_id>', methods=['PUT'])
 @flask_praetorian.auth_required
 def update_user(user_id):
-    # Get 
+    # Get user's info
+    req = flask.request.get_json(force=True)
+    first_name = req.get('firstName', None)
+    last_name = req.get('lastName', None)
+    email = req.get('email', None)
+    password = req.get('password', None)
+    # Hash password using flask_praetorian guard
+    hashed_password = guard.hash_password(password)
+    assigned_role = 'examinee'
+    # Create an object for new examinee
+    user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=assigned_role)
+    update_user = update_user(user)
+    return { "success": True, "user": update_user }, 200
+
+
+"""
+    DELETE A USER
+    @route: /api/v1/user/:id
+    @method: DELETE
+    @return: status
+"""
+@app.route('/api/v1/user/<int:user_id>', methods=['DELETE'])
+@flask_praetorian.auth_required
+def delete(user_id):
+    res = delete_user(user_id)
+    return { "success": True }, 200
+
+
+

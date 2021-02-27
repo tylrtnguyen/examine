@@ -1,37 +1,54 @@
 import os
 import flask
 import flask_sqlalchemy
+import flask_marshmallow
 import flask_praetorian
 import flask_cors
-import flask_marshmallow
+import connexion
+from flask_swagger_ui import get_swaggerui_blueprint
+
 
 # Initialize flask app
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = flask.Flask(__name__)
+
+SWAGGER_URL = "/api/v1"
+API_URL = "/static/swagger.yml"
+SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name':"Examine REST API V1"
+    }
+)
+
+app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
+
+# Create the SQLite URL for SQLAlchemy
+sqlite_url = "sqlite:///" + os.path.join(basedir, "database.db")
+
 app.config['SECRET_KEY'] = 'secretpassword'
 app.config['JWT_ACCESS_LIFESPAN'] = { 'hours': 24 } 
 app.config['JWT_REFRESH_LIFESPAN'] = { 'days': 7 }
+app.config['SQLALCHEMY_DATABASE_URI'] = sqlite_url
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Initilizes Marshmallow
-ma = flask_marshmallow.Marshmallow(app)
-
-db = flask_sqlalchemy.SQLAlchemy()
 guard = flask_praetorian.Praetorian()
 cors = flask_cors.CORS()
 
 
-
+# Create the SQLAlchemy db instance
+db = flask_sqlalchemy.SQLAlchemy()
+db.init_app(app)
+# Initilizes Marshmallow
+ma = flask_marshmallow.Marshmallow(app)
 
 from models import User
+
 # Initialize the flask-preaetorian instance
 guard.init_app(app, User)
-
-# Initialize a local database
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.getcwd(), 'database.db')}"
-db.init_app(app)
-
-# Initializes CORS
-cors.init_app(app)
-
 
 
 import routes
@@ -49,9 +66,6 @@ with app.app_context():
             role = 'admin'
         ))
     db.session.commit()
-
-
-
 
 
 
