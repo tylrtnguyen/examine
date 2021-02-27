@@ -6,7 +6,7 @@ import Footer from '../../components/Footer';
 const RegisterPage = () => {
     return (
         <React.Fragment>
-            <NavBar />
+            <NavBar title="Examine" link="/" />
             <RegisterForm />
             <Footer />
         </React.Fragment>

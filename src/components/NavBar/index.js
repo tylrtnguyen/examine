@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import BorderColorIcon from '@material-ui/icons/BorderColor';
 import Typography from '@material-ui/core/Typography';
@@ -13,32 +13,38 @@ import Link from '@material-ui/core/Link';
 const useStyles = makeStyles((theme) => ({
     icon: {
         marginRight: theme.spacing(2)
+    },
+    root: {
+        flexGrow: 1,
+    },
+    title: {
+        flexGrow: 1
     }
 }))
 
-const NavBar = () => {
+const NavBar = ({ title, link }) => {
     const classes = useStyles();
 
     return (
-        <React.Fragment>
-            <CssBaseline />
-                <AppBar position="relative">
-
+        <div className={classes.root}>
+                <AppBar position="static">
                     <Toolbar>
                     <BorderColorIcon className={classes.icon} />
-                    <Link href="/" color="inherit">
+                    <Link href={link} color="inherit">
                     <Typography variant="h6" color="inherit" noWrap>
-                        Examine
+                        {title}
                     </Typography>
                     </Link>
-                    
                     </Toolbar>
                 </AppBar>
-            
-            
-        </React.Fragment>
+        </div>
         
     )
 }
 
 export default NavBar;
+
+NavBar.propTypes = {
+    title: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired
+}

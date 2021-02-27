@@ -1,19 +1,18 @@
 
-import React from 'react';
-import Copyright from '../Copyright';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { SubmitValidate } from '../../utils/FormValidate';
 
 
 
@@ -38,7 +37,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginForm = () => {
+  // Initialize the useStyle method
   const classes = useStyles();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('')
+  const history = useHistory();
+  const SERVER = "http://localhost:5000";
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Using axios to parse POST request
+    axios.post(`${SERVER}/api/v1/login`, {
+      email,
+      password
+    }).then(response => {
+      // Set login status
+      localStorage.setItem('token', response.data.access_token)
+      console.log('Logged user in successfully');
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -50,7 +71,7 @@ const LoginForm = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form method="POST" className={classes.form} onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -59,8 +80,10 @@ const LoginForm = () => {
             id="email"
             label="Email Address"
             name="email"
+            type="email"
             autoComplete="email"
-            autoFocus
+            value={email}
+            onChange = {e => setEmail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -71,11 +94,8 @@ const LoginForm = () => {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -83,6 +103,7 @@ const LoginForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled = {!SubmitValidate(email, password)}
           >
             Sign In
           </Button>

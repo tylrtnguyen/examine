@@ -6,7 +6,7 @@ import NavBar from '../../components/NavBar';
 const IndexPage = () => {
     return (
         <React.Fragment>
-            <NavBar />
+            <NavBar title="Examine" link="/" />
             <MainLayout />
             <Footer />
         </React.Fragment>

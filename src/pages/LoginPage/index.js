@@ -6,7 +6,7 @@ import LoginForm from '../../components/LoginForm';
 const LoginPage = () => {
     return (
         <React.Fragment>
-            <NavBar />
+            <NavBar title="Examine" link="/" />
             <LoginForm />
             <Footer />
         </React.Fragment>

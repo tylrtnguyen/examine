@@ -1,29 +1,35 @@
 import React from 'react';
 import Copyright from '../Copyright';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = () => makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      maxHeight: '100vh',
+    },
     footer: {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(10)
-    }
-}))
+      padding: theme.spacing(3, 2),
+      marginTop: 'auto',
+      backgroundColor:
+        theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[800],
+    },
+  }));
 
 const Footer = () => {
     const classes = useStyles();
 
     return (
-        <footer className={classes.footer}>
-            <Typography variant="h6" align="center" gutterBottom>
-                Examine
-            </Typography>
-            <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-                Made with ❤ by <Link color="inherit" href="https://thongba.io">Thong Nguyen</Link>
-            </Typography>
-            <Copyright />
-        </footer>
+        <div className={classes.root}>
+      <CssBaseline />
+      <footer className={classes.footer}>
+        <Container maxWidth="sm">
+          <Copyright />
+        </Container>
+      </footer>
+    </div>
     )
 
 };
