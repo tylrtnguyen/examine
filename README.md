@@ -38,7 +38,6 @@
     ```shell
     # Start frontend development
     npm run start
-    cd api
     # Start backend development
     npm run start-api
     ```
