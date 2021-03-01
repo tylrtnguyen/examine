@@ -8,7 +8,6 @@ import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
     heroContent: {
-        backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(15,0,6),
     },
     heroButtons: {

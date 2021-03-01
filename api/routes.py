@@ -43,7 +43,7 @@ def register():
     assigned_role = 'examinee'
     user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, role=assigned_role)
     # Create a new user
-    new_user = create_user(user)
+    create_user(user)
     return { 'success': True, 'user': f"{first_name} {last_name}"}, 201
     
 

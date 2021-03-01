@@ -42,6 +42,7 @@ cors = flask_cors.CORS()
 # Create the SQLAlchemy db instance
 db = flask_sqlalchemy.SQLAlchemy()
 db.init_app(app)
+cors.init_app(app)
 # Initilizes Marshmallow
 ma = flask_marshmallow.Marshmallow(app)
 

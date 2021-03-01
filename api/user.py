@@ -4,7 +4,7 @@
 
 from flask import make_response, abort
 from models import User, UserSchema
-from config import db
+from config import db, guard
 
 
 def user_login(email, password):
@@ -14,7 +14,6 @@ def user_login(email, password):
         user = guard.authenticate(email, password)
         res = {'success': True, 'role': user.role,  'access_token': guard.encode_jwt_token(user)}
         return res
-
 
 def get_all():
     """
@@ -60,7 +59,7 @@ def create_user(user):
     @return: created user
     """
 
-    email = user.get('email')
+    email = user.email
 
     existing_user = (
         User.query.filter(User.email == email)
@@ -69,17 +68,13 @@ def create_user(user):
 
     # Can we insert this person?
     if existing_user is None:
-
-        # Create a user instance using the schema and the passed in user
         schema = UserSchema()
-        new_user = schema.load(user, session=db.session)
-
         # Add the user to the database
-        db.session.add(new_user)
+        db.session.add(user)
         db.session.commit()
 
         # Serialize and return the new created user in the response
-        data = schema.dump(new_user)
+        data = schema.dump(user)
 
         return data, 201
 

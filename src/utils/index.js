@@ -10,3 +10,11 @@ export const RegisterValidate = (fname, lname, email, password) => {
 export const MessageValidate = (message) => {
     return message.length > 0
 }
+
+export const checkAuthorization = () => {
+    return localStorage.getItem('role') === 'admin'
+}
+
+export const getToken = () => {
+    return localStorage.getItem('token')
+}

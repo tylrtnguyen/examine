@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RegisterForm = () => {
     const classes = useStyles();
+    const history = useHistory();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -51,6 +53,7 @@ const RegisterForm = () => {
       }).then(response => {
         // Set login status
         console.log(`Examinee ${response.data.examinee} has registered successfully`);
+        history.push("/login")
       }).catch(error => {
         console.log(error)
       })
@@ -115,7 +118,7 @@ const RegisterForm = () => {
                 type="password"
                 id="password"
                 value={password}
-                onChange={e => setPassword(e.target.password)}
+                onChange={e => setPassword(e.target.value)}
               />
             </Grid>
           </Grid>

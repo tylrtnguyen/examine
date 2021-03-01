@@ -14,7 +14,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { Redirect } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
-import { ListItems } from "./SubComponents/ListItems";
+import { ListItems } from "../ListItems";
 import { UseStyles } from "./UseStyles";
 
 

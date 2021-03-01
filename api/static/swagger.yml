@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "This is a REST API created for the examination system named Examine"
+  description: "This is a REST API created for the examination system name Examine"
   version: "1.0.0"
   title: "Examine"
   contact:
@@ -11,8 +11,8 @@ info:
 host: "localhost:5000"
 basePath: "/api/v1"
 schemes:
-- "https"
 - "http"
+- "https"
 paths:
   /login:
     post:
@@ -21,6 +21,12 @@ paths:
       - Authentication
       summary: Logs the user into the system
       description: Logs the user into the system
+      parameters:
+      - name: request_body
+        in: body
+        description: User's credentials to login
+        required: true
+        type: string
       responses:
         200:
           description: Successfully logged in
@@ -72,7 +78,7 @@ paths:
                   type: string
                   description: Create/Update timestamp of the person object
       security:
-      - api_key: []
+      - Bearer: []
     post:
       operationId: user.create_user
       tags:
@@ -87,9 +93,18 @@ paths:
           schema:
             type: object
             properties:
+              first_name:
+                type: string
+                description: First name of the user to create
+              last_name:
+                type: string
+                description: Last name of the user to create
               email:
                 type: string
                 description: Email of user to create
+              password:
+                type: string
+                description: Password of user to create
       responses:
         201:
           description: Successfully created person
@@ -114,7 +129,7 @@ paths:
                 type: string
                 description: Create/Update timestamp of the person object
       security:
-      - api_key: []
+      - Bearer: []
   /user/{user_id}:
     get:
       operationId: user.get_one
@@ -155,7 +170,7 @@ paths:
         "400":
           description: Invalid ID
       security:
-      - api_key: []
+      - Bearer: []
     put:
       tags:
       - User
@@ -171,7 +186,7 @@ paths:
           description: ID of the user to update
           required: true
           type: integer
-        - name: person
+        - name: user
           in: body
           schema:
             type: object
@@ -206,7 +221,7 @@ paths:
         "400":
           description: "Invalid user id"
       security:
-      - api_key: []
+      - Bearer: [] 
     delete:
       tags:
       - User
@@ -230,12 +245,14 @@ paths:
           description: "Invalid ID supplied"
         "404":
           description: "User not found"
-    
 securityDefinitions:
-  api_key:
+  Bearer:
     type: apiKey
     name: Authorization
     in: header
+    description: "JWT Authorization header using the Bearer scheme"
+security:
+  - Bearer: []  
 definitions:
   User:
     type: "object"

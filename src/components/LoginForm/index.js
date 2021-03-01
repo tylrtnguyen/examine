@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { SubmitValidate } from '../../utils/FormValidate';
+import { SubmitValidate } from '../../utils';
 
 
 
@@ -54,6 +54,14 @@ const LoginForm = () => {
     }).then(response => {
       // Set login status
       localStorage.setItem('token', response.data.access_token)
+      const role = response.data.role;
+      localStorage.setItem('role', role)
+      if (role === 'admin') {
+        history.push("/dashboard");
+      }
+      else {
+        history.push("/");
+      }
       console.log('Logged user in successfully');
     }).catch(error => {
       console.log(error)
@@ -108,13 +116,8 @@ const LoginForm = () => {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/register" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
