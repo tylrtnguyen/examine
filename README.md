@@ -15,7 +15,7 @@
 - Landing Page
 - REST API with swagger UI integrated
 
-### Future Improment
+### Future Improvement
 - Admin Dashboard
 - Examinee Dashboard
 - The Exam UI
